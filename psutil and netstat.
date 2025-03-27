@@ -1,0 +1,17 @@
+file name; tcp_daemons.py
+
+import psutil
+
+def list_tcp_daemons():
+    print(f"{'PID':<10}{'Process Name':<25}{'Local Address':<30}{'Status'}")
+    print("=" * 80)
+
+    for conn in psutil.net_connections(kind='tcp'):
+        if conn.status == 'LISTEN':  # Filtering only listening daemons
+            process = psutil.Process(conn.pid) if conn.pid else None
+            process_name = process.name() if process else "Unknown"
+
+            print(f"{conn.pid:<10}{process_name:<25}{str(conn.laddr):<30}{conn.status}")
+
+if __name__ == "__main__":
+    list_tcp_daemons()
